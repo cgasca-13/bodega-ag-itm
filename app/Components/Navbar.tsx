@@ -3,13 +3,14 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
-const Navbar = ({ direction }: { direction: string }) => {
+const Navbar = ({ direction, children }: { direction: string; children?: React.ReactNode }) => {
 
     const [getDirection] = useState(direction || "Inventario");
 
   return (
-    <div className="flex text-white">
-        <div className="w-1/5 min-h-screen justify-center items-start bg-[#233876] pt-4">
+    <>
+        {/* Sidebar izquierdo */}
+        <div className="w-1/5 min-h-screen bg-[#233876] pt-4 flex flex-col text-white">
             <div className="flex justify-center">
                 <Image src="/images/logoNavbar.png" alt="Logo" width={220} height={220} />
             </div>
@@ -30,10 +31,19 @@ const Navbar = ({ direction }: { direction: string }) => {
             </div>
         </div>
 
-        <div className="w-full h-24 bg-[#4F6091] px-6 flex items-center">
-            <p className="text-2xl">BODEGA AG / {getDirection}</p>
+        {/* Contenedor derecho con header y contenido */}
+        <div className="flex-1 flex flex-col">
+            {/* Barra superior */}
+            <div className="w-full h-24 bg-[#4F6091] px-6 flex items-center text-white">
+                <p className="text-2xl">BODEGA AG / {getDirection}</p>
+            </div>
+            
+            {/* Área de contenido */}
+            <div className="flex-1 bg-gray-50">
+                {children}
+            </div>
         </div>
-    </div>
+    </>
   )
 }
 
