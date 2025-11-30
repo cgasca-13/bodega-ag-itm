@@ -1,11 +1,41 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { FaUserCircle } from "react-icons/fa";
+import { MdInventory } from "react-icons/md";
+import { MdCategory } from "react-icons/md";
+import { LuHistory } from "react-icons/lu";
+import { HiUsers } from "react-icons/hi";
 
 const Navbar = ({ direction, children }: { direction: string; children?: React.ReactNode }) => {
-
+    const router = useRouter();
     const [getDirection] = useState(direction || "Inventario");
+    const [showLogoutMenu, setShowLogoutMenu] = useState(false);
+    const menuRef = useRef<HTMLDivElement>(null);
+
+    // Cerrar el menú al hacer clic fuera
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setShowLogoutMenu(false);
+            }
+        };
+
+        if (showLogoutMenu) {
+            document.addEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [showLogoutMenu]);
+
+    const handleLogout = () => {
+        sessionStorage.removeItem("authToken");
+        router.push("/");
+    };
 
   return (
     <>
@@ -16,16 +46,20 @@ const Navbar = ({ direction, children }: { direction: string; children?: React.R
             </div>
             
             <div className="mt-14 flex flex-col text-3xl gap-4 px-8">
-                <Link href="/Inventory" className={`${getDirection === "Inventario" ? "bg-[#4F6091]" : ""} hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                <Link href="/Inventory" className={`${getDirection === "Inventario" ? "bg-[#4F6091]" : ""} flex items-center hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                    <MdInventory className="inline mr-2" />
                     <p>Inventario</p>
                 </Link>
-                <Link href="/Catalogues" className={`${getDirection === "Catálogos" ? "bg-[#4F6091]" : ""} hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                <Link href="/Catalogues" className={`${getDirection === "Catálogos" ? "bg-[#4F6091]" : ""} flex items-center hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                    <MdCategory className="inline mr-2 text-4xl" />
                     <p>Catálogos</p>
                 </Link>
-                <Link href="/History" className={`${getDirection === "Historial" ? "bg-[#4F6091]" : ""} hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                <Link href="/History" className={`${getDirection === "Historial" ? "bg-[#4F6091]" : ""} flex items-center hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                    <LuHistory className="inline mr-2 text-4xl" />
                     <p>Historial</p>
                 </Link>
-                <Link href="/Users" className={`${getDirection === "Usuarios" ? "bg-[#4F6091]" : ""} hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                <Link href="/Users" className={`${getDirection === "Usuarios" ? "bg-[#4F6091]" : ""} flex items-center hover:bg-[#4F6091] transition-colors duration-200 p-3 rounded-xl`}>
+                    <HiUsers className="inline mr-2 text-4xl" />
                     <p>Usuarios</p>
                 </Link>
             </div>
@@ -36,10 +70,27 @@ const Navbar = ({ direction, children }: { direction: string; children?: React.R
             {/* Barra superior */}
             <div className="w-full h-24 bg-[#4F6091] px-6 flex items-center text-white">
                 <p className="text-2xl">BODEGA AG / {getDirection}</p>
+                <div className="ml-auto relative" ref={menuRef}>
+                    <FaUserCircle 
+                        className="text-6xl hover:cursor-pointer text-white hover:opacity-80 transition-opacity duration-200" 
+                        onClick={() => setShowLogoutMenu(!showLogoutMenu)}
+                    />
+                    
+                    {showLogoutMenu && (
+                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border border-gray-200">
+                            <button
+                                onClick={handleLogout}
+                                className="w-full text-left px-4 py-4 text-gray-700 hover:bg-red-50 hover:text-red-600 hover:rounded-lg hover:cursor-pointer transition-all duration-200 flex items-center gap-2"
+                            >
+                                <span className="text-lg">Cerrar Sesión</span>
+                            </button>
+                        </div>
+                    )}
+                </div>
             </div>
             
             {/* Área de contenido */}
-            <div className="flex-1 bg-gray-50">
+            <div className="flex-1 bg-[#EEEEEE]">
                 {children}
             </div>
         </div>
