@@ -4,15 +4,21 @@ import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import AreaModal from './AreaModal';
 
+interface Area {
+  idArea: number;
+  nombre: string;
+  activo: boolean;
+}
+
 const AreaTable = () => {
 
-  const [areas, setAreas] = React.useState([]);
-  const [filteredAreas, setFilteredAreas] = React.useState([]);
+  const [areas, setAreas] = React.useState<Area[]>([]);
+  const [filteredAreas, setFilteredAreas] = React.useState<Area[]>([]);
   const [searchText, setSearchText] = React.useState('');
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedArea, setSelectedArea] = React.useState(null);
+  const [selectedArea, setSelectedArea] = React.useState<Area | null>(null);
 
-  React.useEffect(() => {
+  const loadAreas = React.useCallback(() => {
     const token = sessionStorage.getItem('authToken');
 
     if (!token) {
@@ -31,17 +37,15 @@ const AreaTable = () => {
       .then((data) => {
         if (data.success) {
           setAreas(data.areas);
-          setFilteredAreas(data.areas); // Inicializar filteredAreas con los datos
-          // console.log('Áreas obtenidas:', data.areas);
-        } else {
-          console.error('Error al obtener las áreas:', data.message);
+          setFilteredAreas(data.areas);
         }
       })
-      .catch((error) => {
-        console.error('Error al obtener las áreas', error);
-      });
-
+      .catch(() => {});
   }, []);
+
+  React.useEffect(() => {
+    loadAreas();
+  }, [loadAreas]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
@@ -50,14 +54,14 @@ const AreaTable = () => {
     if (searchTerm === '') {
       setFilteredAreas(areas);
     } else {
-      const filtered = areas.filter((area: any) =>
+      const filtered = areas.filter((area: Area) =>
         area.nombre.toLowerCase().includes(searchTerm)
       );
       setFilteredAreas(filtered);
     }
   };
 
-  const handleEdit = (area: any) => {
+  const handleEdit = (area: Area) => {
     setSelectedArea(area);
     setIsModalOpen(true);
   };
@@ -67,9 +71,45 @@ const AreaTable = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (area: any) => {
-    // Lógica para eliminar el área
-    console.log('Desactivar área:', area);
+  const handleDelete = async (area: Area) => {
+    if (!confirm(`¿Está seguro de que desea desactivar el área "${area.nombre}"?`)) {
+      return;
+    }
+
+    try {
+      const token = sessionStorage.getItem('authToken');
+      
+      if (!token) {
+        return;
+      }
+
+      // Obtener el ID del área
+      const areaId = area.idArea;
+      
+      if (!areaId) {
+        alert('Error: No se encontró el ID del área');
+        return;
+      }
+
+      const response = await fetch(`/api/auth/catalogues/area/${areaId}/deactivate`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        alert('Área desactivada exitosamente');
+        loadAreas(); // Recargar la lista
+      } else {
+        alert('Error al desactivar el área: ' + data.message);
+      }
+    } catch (error) {
+      alert('Error al desactivar el área');
+    }
   }
 
   const handleCloseModal = () => {
@@ -80,12 +120,17 @@ const AreaTable = () => {
   const columns = [
     {
       name: 'Nombre',
-      selector: (row: any) => row.nombre,
+      selector: (row: Area) => row.nombre,
+      sortable: true,
+    },
+    {
+      name: 'Estado',
+      selector: (row: Area) => row.activo ? 'Activo' : 'Inactivo',
       sortable: true,
     },
     {
       name: 'Acciones',
-      cell: (row: any) => (
+      cell: (row: Area) => (
         <div className="flex gap-2">
           <button 
             onClick={() => handleEdit(row)} 
@@ -100,8 +145,6 @@ const AreaTable = () => {
           </button>
         </div>
       ),
-      ignoreRowClick: true,
-      button: true,
     }
   ]
 
@@ -165,6 +208,7 @@ const AreaTable = () => {
       <AreaModal 
         area={selectedArea} 
         onClose={handleCloseModal}
+        onSuccess={loadAreas}
       />
     )}
     </>
