@@ -1,0 +1,32 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function POST(request: NextRequest) {
+  try {
+    const authHeader = request.headers.get('authorization');
+    const body = await request.json();
+
+    const response = await fetch('http://localhost:8080/api/estados', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': authHeader
+      },
+      body: JSON.stringify(body)
+    });
+
+    const responseText = await response.text();
+    
+    if (response.ok) {
+      try {
+        const data = JSON.parse(responseText);
+        return NextResponse.json(data);
+      } catch {
+        return NextResponse.json({ message: 'Estado creado exitosamente' });
+      }
+    } else {
+      return NextResponse.json({ error: 'Error al crear estado' }, { status: response.status });
+    }
+  } catch {
+    return NextResponse.json({ error: 'Error al crear estado' }, { status: 500 });
+  }
+}

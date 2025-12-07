@@ -1,18 +1,49 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const LoginForm = () => {
+    const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError("");
+        setIsLoading(true);
         
-        //Lógica de autenticación
+        // console.log({ usuario: username, contrasena: password });
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ usuario: username, contrasena: password })
+            });
 
-        // console.log("Login attempt:", { username, password });
+            const data = await response.json();
+
+            if (!response.ok || !data.success) {
+                throw new Error(data.message || 'Error de autenticación');
+            }
+
+            // Guardar token en sessionStorage
+            sessionStorage.setItem("authToken", data.token);
+            sessionStorage.setItem("currentUser", username);
+            sessionStorage.setItem("currentUserName", data.user?.nombre || username);
+            sessionStorage.setItem("userLevel", data.user?.nivel?.toString() || "2");
+            
+            // Redirigir al inventario
+            router.push("/Inventory");
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Error al iniciar sesión");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -48,16 +79,21 @@ const LoginForm = () => {
                             transition-all duration-200"/>
             </div>
 
-            <Link href="/Inventory">
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                    {error}
+                </div>
+            )}
+
             <button 
                 type="submit"
+                disabled={isLoading}
                 className="bg-[#233876] hover:bg-[#1b2a5f] text-white p-3 md:p-4 rounded-xl w-full h-12 md:h-14 
                         text-lg md:text-xl font-semibold transition-all duration-300 hover:cursor-pointer 
-                        hover:shadow-lg active:scale-[0.98] mt-8"
+                        hover:shadow-lg active:scale-[0.98] mt-8 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                Iniciar Sesión
+                {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
             </button>
-            </Link>
 
             </form>
 
