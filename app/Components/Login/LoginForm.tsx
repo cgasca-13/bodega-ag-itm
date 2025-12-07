@@ -33,6 +33,9 @@ const LoginForm = () => {
 
             // Guardar token en sessionStorage
             sessionStorage.setItem("authToken", data.token);
+            sessionStorage.setItem("currentUser", username);
+            sessionStorage.setItem("currentUserName", data.user?.nombre || username);
+            sessionStorage.setItem("userLevel", data.user?.nivel?.toString() || "2");
             
             // Redirigir al inventario
             router.push("/Inventory");

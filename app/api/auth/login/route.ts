@@ -28,10 +28,14 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({
         success: true,
         token,
-        user: { usuario }
+        user: { 
+            usuario,
+            nombre: user.nombre || usuario, // Devolver nombre o usuario como fallback
+            nivel: user.nivel || 2 // Devolver nivel de acceso
+        }
         }, { status: 200 });
         
-    } catch (error) {
+    } catch {
         return NextResponse.json({
         success: false,
         message: "Error de autenticación"
