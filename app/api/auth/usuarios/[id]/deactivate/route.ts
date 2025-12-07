@@ -20,7 +20,7 @@ export async function PATCH(
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': authHeader
+                'Authorization': authHeader!
             }
         });
 
