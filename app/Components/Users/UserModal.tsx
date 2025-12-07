@@ -1,4 +1,5 @@
 import React from 'react'
+import { useRouter } from 'next/navigation'
 
 interface Usuario {
   idUsuario: number;
@@ -16,6 +17,7 @@ interface UserModalProps {
 }
 
 const UserModal = ({ usuario, onClose, onSuccess, currentUsername }: UserModalProps) => {
+    const router = useRouter();
     const isEditing = usuario !== null;
     const [usuarioUsername, setUsuarioUsername] = React.useState(usuario?.usuario || '');
     const [nombre, setNombre] = React.useState(usuario?.nombre || '');
@@ -101,6 +103,19 @@ const UserModal = ({ usuario, onClose, onSuccess, currentUsername }: UserModalPr
 
             if (!response.ok || !data.success) {
                 throw new Error(data.message || 'Error al guardar el usuario');
+            }
+
+            // Si el usuario se desactivó a sí mismo, cerrar sesión
+            if (isEditing && usuario?.usuario === currentUsername && !activo) {
+                // Limpiar sesión
+                sessionStorage.removeItem('authToken');
+                sessionStorage.removeItem('currentUser');
+                sessionStorage.removeItem('currentUserName');
+                sessionStorage.removeItem('userLevel');
+                
+                // Redirigir al login
+                router.push('/');
+                return;
             }
 
             // Éxito - cerrar modal y refrescar tabla
@@ -210,7 +225,7 @@ const UserModal = ({ usuario, onClose, onSuccess, currentUsername }: UserModalPr
                 {/* Advertencia cuando se deshabilita el propio usuario */}
                 {usuario?.usuario === currentUsername && usuario?.activo && !activo && (
                     <div className="mt-2 bg-red-50 border border-red-200 text-red-800 px-3 py-2 rounded-lg text-xs">
-                        ⚠️ Está deshabilitando su propia cuenta. No podrá iniciar sesión hasta que otro usuario con acceso Total la reactive.
+                        ⚠️ Está deshabilitando su propia cuenta. Su sesión se cerrará automáticamente y no podrá iniciar sesión hasta que otro usuario con acceso Total la reactive.
                     </div>
                 )}
                 </div>
