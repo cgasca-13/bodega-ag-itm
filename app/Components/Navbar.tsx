@@ -52,8 +52,8 @@ const Navbar = ({ direction, children }: { direction: string; children?: React.R
 
   return (
     <>
-        {/* Sidebar izquierdo */}
-        <div className="w-1/5 min-h-screen bg-[#233876] pt-4 flex flex-col text-white">
+        {/* Sidebar izquierdo - Fixed */}
+        <div className="fixed left-0 top-0 w-1/5 h-screen bg-[#233876] pt-4 flex flex-col text-white z-40">
             <div className="flex justify-center">
                 <Image src="/images/logoNavbar.png" alt="Logo" width={220} height={220} />
             </div>
@@ -89,10 +89,10 @@ const Navbar = ({ direction, children }: { direction: string; children?: React.R
             </div>
         </div>
 
-        {/* Contenedor derecho con header y contenido */}
-        <div className="flex-1 flex flex-col">
-            {/* Barra superior */}
-            <div className="w-full h-24 bg-[#4F6091] px-6 flex items-center text-white">
+        {/* Contenedor derecho con header y contenido - Con margen izquierdo */}
+        <div className="ml-[20%] flex flex-col min-h-screen">
+            {/* Barra superior - Sticky */}
+            <div className="sticky top-0 w-full h-24 bg-[#4F6091] px-6 flex items-center text-white z-30">
                 <p className="text-2xl">BODEGA AG / {getDirection}</p>
                 <div className="ml-auto relative flex items-center gap-2" ref={menuRef}>
                     <p className="font-semibold">{currentUserName}</p>
@@ -114,8 +114,8 @@ const Navbar = ({ direction, children }: { direction: string; children?: React.R
                 </div>
             </div>
             
-            {/* Área de contenido */}
-            <div className="flex-1 bg-[#EEEEEE]">
+            {/* Área de contenido scrolleable */}
+            <div className="flex-1 bg-[#EEEEEE] overflow-y-auto">
                 {children}
             </div>
         </div>

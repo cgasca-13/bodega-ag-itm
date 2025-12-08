@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(
+export async function DELETE(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -15,46 +15,40 @@ export async function PATCH(
         }
 
         const { id } = await params;
+        const { motivo } = await request.json();
 
-        const response = await fetch(`http://localhost:8080/api/usuarios/${id}/desactivar`, {
-            method: 'PATCH',
+        if (!motivo || motivo.trim() === '') {
+            return NextResponse.json({
+                success: false,
+                message: "El motivo de la baja es obligatorio"
+            }, { status: 400 });
+        }
+
+        const response = await fetch(`http://localhost:8080/api/productos/${id}/baja`, {
+            method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': authHeader!
-            }
+            },
+            body: JSON.stringify({ motivo })
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            
             return NextResponse.json({
                 success: false,
-                message: `Error del backend: ${errorText}`,
-                status: response.status
+                message: "Error al dar de baja el producto"
             }, { status: response.status });
         }
 
-        // Intentar parsear la respuesta
-        let deactivatedUser;
-        const responseText = await response.text();
-        
-        try {
-            deactivatedUser = responseText ? JSON.parse(responseText) : {};
-        } catch (parseError) {
-            // Si no es JSON, asumir éxito
-            deactivatedUser = { message: 'Usuario desactivado' };
-        }
-        
         return NextResponse.json({
             success: true,
-            usuario: deactivatedUser,
-            message: "Usuario desactivado exitosamente"
-        }, { status: 200 });
-        
+            message: "Producto dado de baja exitosamente"
+        });
     } catch (error) {
+        console.error('Error en DELETE /api/productos/[id]/baja:', error);
         return NextResponse.json({
             success: false,
-            message: "Error al desactivar el usuario"
+            message: "Error interno del servidor"
         }, { status: 500 });
     }
 }

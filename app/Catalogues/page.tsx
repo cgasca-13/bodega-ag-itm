@@ -13,14 +13,12 @@ const Page = () => {
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCatalogue(e.target.value);
-    console.log("Catálogo seleccionado:", e.target.value);
   };
 
   return (
     <ProtectedRoute>
-    <div className="flex h-screen">
-        <Navbar direction="Catálogos">
-          <div className="p-12">
+      <Navbar direction="Catálogos">
+        <div className="p-12">
             <div className="flex">
               <h1 className="text-3xl font-bold text-[#525252]">Catálogos</h1>
             </div>
@@ -60,10 +58,8 @@ const Page = () => {
             )}
             
           </div>
-
-          </div>
-        </Navbar>
-    </div>
+        </div>
+      </Navbar>
     </ProtectedRoute>
   )
 }

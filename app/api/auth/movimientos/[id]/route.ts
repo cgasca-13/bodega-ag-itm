@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PATCH(
+export async function GET(
     request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
@@ -16,8 +16,8 @@ export async function PATCH(
 
         const { id } = await params;
 
-        const response = await fetch(`http://localhost:8080/api/usuarios/${id}/desactivar`, {
-            method: 'PATCH',
+        const response = await fetch(`http://localhost:8080/api/movimientos/${id}`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': authHeader!
@@ -25,36 +25,22 @@ export async function PATCH(
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            
             return NextResponse.json({
                 success: false,
-                message: `Error del backend: ${errorText}`,
-                status: response.status
+                message: "Error al obtener el movimiento"
             }, { status: response.status });
         }
 
-        // Intentar parsear la respuesta
-        let deactivatedUser;
-        const responseText = await response.text();
-        
-        try {
-            deactivatedUser = responseText ? JSON.parse(responseText) : {};
-        } catch (parseError) {
-            // Si no es JSON, asumir éxito
-            deactivatedUser = { message: 'Usuario desactivado' };
-        }
+        const movimiento = await response.json();
         
         return NextResponse.json({
             success: true,
-            usuario: deactivatedUser,
-            message: "Usuario desactivado exitosamente"
-        }, { status: 200 });
-        
-    } catch (error) {
+            data: movimiento
+        });
+    } catch {
         return NextResponse.json({
             success: false,
-            message: "Error al desactivar el usuario"
+            message: "Error interno del servidor"
         }, { status: 500 });
     }
 }
