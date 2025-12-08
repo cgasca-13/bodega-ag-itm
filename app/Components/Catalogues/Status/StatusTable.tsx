@@ -114,11 +114,20 @@ export default function StatusTable() {
           >
             <FaRegEdit className='text-xl hover:cursor-pointer'/>
           </button>
-          <button
-            onClick={() => handleDelete(row)}
-            className="text-[#F44336] hover:text-red-700 hover:cursor-pointer">
-            <MdDelete className='text-xl hover:cursor-pointer'/>
-          </button>
+          {row.nombre !== 'En Bodega' && row.nombre !== 'Baja' ? (
+            <button
+              onClick={() => handleDelete(row)}
+              className="text-[#F44336] hover:text-red-700 hover:cursor-pointer">
+              <MdDelete className='text-xl hover:cursor-pointer'/>
+            </button>
+          ) : (
+            <button
+              disabled
+              className="text-gray-300 cursor-not-allowed"
+              title="Este estado no se puede eliminar">
+              <MdDelete className='text-xl'/>
+            </button>
+          )}
         </div>
       ),
     }

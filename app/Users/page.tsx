@@ -8,7 +8,6 @@ import UserTable from '../Components/Users/UserTable'
 const Page = () => {
   return (
     <ProtectedRoute>
-    <div className="flex h-screen">
       <Navbar direction="Usuarios">
         <div className="p-12">
           <div className="flex">
@@ -21,7 +20,6 @@ const Page = () => {
           </div>
         </div>
       </Navbar>
-    </div>
     </ProtectedRoute>
   )
 }

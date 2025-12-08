@@ -5,8 +5,7 @@ import Navbar from '../Components/Navbar'
 const page = () => {
   return (
     <ProtectedRoute>
-    <div className="flex h-screen">
-    <Navbar direction="Sobre Nosotros">
+      <Navbar direction="Sobre Nosotros">
         <div className="m-12 p-6 rounded-lg shadow-xl bg-white w-auto">
             <div className="flex">
                 <h1 className="text-3xl font-bold text-[#525252]">Sobre Nosotros</h1>
@@ -25,8 +24,7 @@ const page = () => {
                 <li>Ramírez Arias Luis Javier - Desarrollador Backend</li>
             </ul>
         </div>
-    </Navbar>
-    </div>
+      </Navbar>
     </ProtectedRoute>
   )
 }
