@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
             }, { status: 400 });
         }
 
-        const response = await fetch('http://localhost:8080/api/productos', {
+        const response = await fetch(`${process.env.API_URL}/api/productos`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

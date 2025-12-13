@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Verificar el token con el backend
-        const response = await fetch('http://localhost:8080/api/auth/verify', {
+        const response = await fetch(`${process.env.API_URL}/api/auth/verify`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

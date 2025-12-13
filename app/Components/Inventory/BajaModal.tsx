@@ -38,8 +38,8 @@ const BajaModal = ({ producto, onClose, onSuccess }: BajaModalProps) => {
         return;
       }
 
-      const response = await fetch(`/api/auth/productos/${producto.idProducto}/baja`, {
-        method: 'DELETE',
+      const response = await fetch(`/api/auth/productos/${producto.idProducto}/desactivar`, {
+        method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

@@ -16,7 +16,7 @@ export async function PATCH(
 
         const { id } = await params;
 
-        const response = await fetch(`http://localhost:8080/api/usuarios/${id}/activar`, {
+        const response = await fetch(`${process.env.API_URL}/api/usuarios/${id}/activar`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

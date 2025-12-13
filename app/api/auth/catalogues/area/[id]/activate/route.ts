@@ -18,7 +18,7 @@ export async function PATCH(
         
         console.log('ID recibido para activar:', id);
 
-        const response = await fetch(`http://localhost:8080/api/areas/${id}/activar`, {
+        const response = await fetch(`${process.env.API_URL}/api/areas/${id}/activar`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        const response = await fetch('http://localhost:8080/api/auth/registro', {
+        const response = await fetch(`${process.env.API_URL}/api/auth/registro`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

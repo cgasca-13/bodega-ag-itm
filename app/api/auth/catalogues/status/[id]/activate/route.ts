@@ -8,7 +8,7 @@ export async function PATCH(
     const authHeader = request.headers.get('authorization');
     const { id } = await params;
 
-    const response = await fetch(`http://localhost:8080/api/estados/${id}/activar`, {
+    const response = await fetch(`${process.env.API_URL}/api/estados/${id}/activar`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',

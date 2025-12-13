@@ -280,7 +280,7 @@ const InventoryTable = () => {
         <div className="w-full flex justify-center gap-3">
           <button 
             onClick={() => handleView(row)} 
-            className="text-blue-500 hover:text-blue-700"
+            className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
             title="Ver detalles"
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
@@ -327,66 +327,90 @@ const InventoryTable = () => {
   return (
     <>
       <div className='p-1 bg-white rounded-lg'>
-        <div className='flex justify-between px-4 py-2 items-center'>
-          <h2 className='text-2xl font-semibold text-[#525252] mb-4'>
+        <div className='flex flex-col sm:flex-row justify-between px-2 sm:px-4 py-2 items-start sm:items-center gap-2'>
+          <h2 className='text-xl sm:text-2xl font-semibold text-[#525252]'>
             Resultados: [{filteredProductos.length}]
           </h2>
           <button 
             onClick={handleCreateNew}
-            className='bg-[#233876] text-white px-4 py-2 rounded-lg hover:bg-[#1a2e5b] hover:cursor-pointer transition-all duration-200'
+            className='bg-[#233876] text-white px-4 py-2 rounded-lg hover:bg-[#1a2e5b] hover:cursor-pointer transition-all duration-200 w-full sm:w-auto text-sm sm:text-base'
           >
             + Nuevo Producto
           </button>
         </div>
 
         {/* Filtros */}
-        <div className='px-4 pb-4 grid grid-cols-1 md:grid-cols-4 gap-3'>
-          <input 
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
-            type="text" 
-            placeholder="Buscar por NoSerie/NoInv..."
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
+        <div className='px-2 sm:px-4 pb-4 grid grid-cols-1 md:grid-cols-4 gap-3'>
+          <div>
+            <label htmlFor="search-input" className='block text-sm font-medium text-gray-700 mb-1'>
+              Buscar
+            </label>
+            <input
+              id="search-input"
+              className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200 w-full'
+              type="text" 
+              placeholder="NoSerie o NoInv..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
 
-          <select
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
-            value={selectedArea}
-            onChange={(e) => setSelectedArea(e.target.value)}
-          >
-            <option value="">Todas</option>
-            {areas && areas.map((area) => (
-              <option key={area.idArea} value={area.idArea.toString()}>
-                {area.nombre}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label htmlFor="area-select" className='block text-sm font-medium text-gray-700 mb-1'>
+              Área
+            </label>
+            <select
+              id="area-select"
+              className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200 w-full'
+              value={selectedArea}
+              onChange={(e) => setSelectedArea(e.target.value)}
+            >
+              <option value="">Todas</option>
+              {areas && areas.map((area) => (
+                <option key={area.idArea} value={area.idArea.toString()}>
+                  {area.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <select
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
-            value={selectedCategoria}
-            onChange={(e) => setSelectedCategoria(e.target.value)}
-          >
-            <option value="">Todas</option>
-            {categorias && categorias.map((categoria) => (
-              <option key={categoria.idCategoria} value={categoria.idCategoria.toString()}>
-                {categoria.nombre}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label htmlFor="categoria-select" className='block text-sm font-medium text-gray-700 mb-1'>
+              Categoría
+            </label>
+            <select
+              id="categoria-select"
+              className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200 w-full'
+              value={selectedCategoria}
+              onChange={(e) => setSelectedCategoria(e.target.value)}
+            >
+              <option value="">Todas</option>
+              {categorias && categorias.map((categoria) => (
+                <option key={categoria.idCategoria} value={categoria.idCategoria.toString()}>
+                  {categoria.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
 
-          <select
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
-            value={selectedEstado}
-            onChange={(e) => setSelectedEstado(e.target.value)}
-          >
-            <option value="">Todos</option>
-            {estados && estados.map((estado) => (
-              <option key={estado.idEstado} value={estado.idEstado.toString()}>
-                {estado.nombre}
-              </option>
-            ))}
-          </select>
+          <div>
+            <label htmlFor="estado-select" className='block text-sm font-medium text-gray-700 mb-1'>
+              Estado
+            </label>
+            <select
+              id="estado-select"
+              className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200 w-full'
+              value={selectedEstado}
+              onChange={(e) => setSelectedEstado(e.target.value)}
+            >
+              <option value="">Todos</option>
+              {estados && estados.map((estado) => (
+                <option key={estado.idEstado} value={estado.idEstado.toString()}>
+                  {estado.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <DataTable

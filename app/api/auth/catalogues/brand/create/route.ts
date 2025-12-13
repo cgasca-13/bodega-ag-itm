@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('authorization');
     const body = await request.json();
 
-    const response = await fetch('http://localhost:8080/api/marcas', {
+    const response = await fetch(`${process.env.API_URL}/api/marcas`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

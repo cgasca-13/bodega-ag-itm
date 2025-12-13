@@ -17,7 +17,7 @@ export async function PUT(
         const body = await request.json();
         const { id } = await params;
 
-        const response = await fetch(`http://localhost:8080/api/areas/${id}`, {
+        const response = await fetch(`${process.env.API_URL}/api/areas/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

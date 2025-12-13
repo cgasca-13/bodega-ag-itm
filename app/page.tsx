@@ -8,7 +8,7 @@ export default function Home() {
         
         <div className="w-full md:w-auto md:shrink-0 bg-white rounded-tl-[200px] md:rounded-tl-[350px] 
         min-h-screen flex items-start justify-center md:min-w-[500px] lg:min-w-[600px] xl:min-w-[700px]">
-          <div className="flex flex-col mt-40 md:mt-20 lg:mt-28 xl:mt-32 w-full px-8 md:px-16">
+          <div className="flex flex-col mt-24 md:mt-20 lg:mt-28 xl:mt-32 w-full px-8 md:px-16">
             <div className="flex w-full items-center justify-center gap-4 pb-14">
               <Image 
                 src="/images/itmMoreliaLogo.png" 
