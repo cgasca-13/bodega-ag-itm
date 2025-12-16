@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
         }
 
         // Hacer la petición al backend con el token
-        const response = await fetch('http://localhost:8080/api/areas/activas', {
+        const response = await fetch(`${process.env.API_URL}/api/areas/activas`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -238,14 +238,14 @@ const HistoryTable = () => {
 
   return (
     <>
-      <div className='p-1 mx-16 bg-white rounded-lg'>
-        <div className='flex justify-between px-4 py-2 items-center'>
-          <h2 className='text-2xl font-semibold text-[#525252] mb-4'>
+      <div className='p-1 mx-2 sm:mx-8 lg:mx-16 bg-white rounded-lg'>
+        <div className='flex flex-col sm:flex-row justify-between px-2 sm:px-4 py-2 items-start sm:items-center gap-3'>
+          <h2 className='text-xl sm:text-2xl font-semibold text-[#525252]'>
             Resultados: [{filteredMovimientos.length}]
           </h2>
           <button 
             onClick={handleGeneratePDF}
-            className='bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer transition-all duration-200 flex items-center gap-2'
+            className='w-full sm:w-auto bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 hover:cursor-pointer transition-all duration-200 flex items-center justify-center gap-2'
           >
             <FaFilePdf className='text-xl' />
             Generar PDF
@@ -253,9 +253,9 @@ const HistoryTable = () => {
         </div>
 
         {/* Filtros */}
-        <div className='px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-3'>
+        <div className='px-2 sm:px-4 pb-4 grid grid-cols-1 md:grid-cols-2 gap-3'>
           <input 
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
+            className='p-3 text-sm sm:text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
             type="date" 
             placeholder="Filtrar por fecha..."
             value={searchFecha}
@@ -263,7 +263,7 @@ const HistoryTable = () => {
           />
           
           <input 
-            className='p-3 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
+            className='p-3 text-sm sm:text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
             type="text" 
             placeholder="Buscar por usuario..."
             value={searchUsuario}
@@ -283,7 +283,19 @@ const HistoryTable = () => {
           progressComponent={<div className='p-6 text-gray-500'>Cargando...</div>}
           customStyles={customStyles}
           fixedHeader
-          noDataComponent={<div className='p-6 text-gray-500'>No se encontraron movimientos</div>}
+          noDataComponent={
+            <div className='flex flex-col items-center justify-center py-12'>
+              <div className='text-6xl mb-4'>📋</div>
+              <h3 className='text-xl font-semibold text-[#525252] mb-2'>
+                No hay movimientos registrados
+              </h3>
+              <p className='text-gray-600 text-center'>
+                {searchFecha || searchUsuario 
+                  ? 'No se encontraron movimientos con los filtros aplicados.' 
+                  : 'Aún no se han registrado movimientos de auditoría en el sistema.'}
+              </p>
+            </div>
+          }
         />
       </div>
     

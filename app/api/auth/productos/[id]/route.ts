@@ -16,7 +16,7 @@ export async function GET(
 
         const { id } = await params;
 
-        const response = await fetch(`http://localhost:8080/api/productos/${id}`, {
+        const response = await fetch(`${process.env.API_URL}/api/productos/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export async function PUT(
         const { id } = await params;
         const body = await request.json();
 
-        const response = await fetch(`http://localhost:8080/api/productos/${id}`, {
+        const response = await fetch(`${process.env.API_URL}/api/productos/${id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

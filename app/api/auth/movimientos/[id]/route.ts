@@ -16,7 +16,7 @@ export async function GET(
 
         const { id } = await params;
 
-        const response = await fetch(`http://localhost:8080/api/movimientos/${id}`, {
+        const response = await fetch(`${process.env.API_URL}/api/movimientos/${id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
         const body = await request.json();
 
-        const response = await fetch('http://localhost:8080/api/areas', {
+        const response = await fetch(`${process.env.API_URL}/api/areas`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

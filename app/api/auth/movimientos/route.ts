@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
         const fecha = searchParams.get('fecha');
 
         // Construir URL con parámetros
-        let apiUrl = 'http://localhost:8080/api/movimientos';
+        let apiUrl = `${process.env.API_URL}/api/movimientos`;
         const params = new URLSearchParams();
         
         if (usuario) params.append('usuario', usuario);

@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Token no proporcionado' }, { status: 401 });
     }
 
-    const response = await fetch('http://localhost:8080/api/categorias/activas', {
+    const response = await fetch(`${process.env.API_URL}/api/categorias/activas`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

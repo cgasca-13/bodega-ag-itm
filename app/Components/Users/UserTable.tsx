@@ -168,18 +168,18 @@ const UserTable = () => {
     ) : (
     <div className='p-1 bg-white rounded-lg'>
 
-      <div className='flex justify-between px-4 py-2 items-center'>
-        <h2 className='text-2xl font-semibold text-[#525252] mb-4'>Usuarios - Resultados [{filteredUsuarios.length}]</h2>
+      <div className='flex flex-col sm:flex-row justify-between px-2 sm:px-4 py-2 items-start sm:items-center gap-3'>
+        <h2 className='text-xl sm:text-2xl font-semibold text-[#525252]'>Usuarios - Resultados [{filteredUsuarios.length}]</h2>
         <button 
           onClick={handleCreateNew}
-          className='bg-[#233876] text-white px-4 py-2 rounded-lg hover:bg-[#1a2e5b] hover:cursor-pointer transition-all duration-200'
+          className='w-full sm:w-auto bg-[#233876] text-white px-4 py-2 rounded-lg hover:bg-[#1a2e5b] hover:cursor-pointer transition-all duration-200'
         >
           + Nuevo Usuario
         </button>
       </div>
       <div className='px-2 pb-2'>
         <input 
-          className='p-3 w-full md:w-96 text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
+          className='p-3 w-full md:w-96 text-sm sm:text-base border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20 transition-all duration-200'
           type="text" 
           placeholder="Buscar usuario por nombre o usuario..."
           value={searchText}

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
         // Hacer la petición al backend con el token
         // El backend Java validará el token y los permisos
-        const response = await fetch('http://localhost:8080/api/usuarios', {
+        const response = await fetch(`${process.env.API_URL}/api/usuarios`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

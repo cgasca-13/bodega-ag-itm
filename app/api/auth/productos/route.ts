@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
         const size = searchParams.get('size');
 
         // Construir URL del backend
-        let backendUrl = 'http://localhost:8080/api/productos';
+        let backendUrl = `${process.env.API_URL}/api/productos`;
         if (page !== null && size !== null) {
-            backendUrl = `http://localhost:8080/api/productos/paginado?page=${page}&size=${size}`;
+            backendUrl = `${process.env.API_URL}/api/productos/paginado?page=${page}&size=${size}`;
         }
 
         // Hacer la petición al backend con el token
