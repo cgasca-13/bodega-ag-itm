@@ -11,7 +11,7 @@ services:
       POSTGRES_USER: ${DB_USER:-bodega_user}
       POSTGRES_PASSWORD: ${DB_PASSWORD:-bodega_password}
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_PORT:-5435}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -48,7 +48,7 @@ services:
       # Perfil de Spring
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE:-prod}
     ports:
-      - "${BACKEND_PORT:-8080}:8080"
+      - "${BACKEND_PORT:-8085}:8080"
     networks:
       - bodega-network
     volumes:
@@ -60,15 +60,15 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8080}
+        NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8085}
     container_name: bodega-frontend
     restart: unless-stopped
     depends_on:
       - backend
     environment:
-      API_URL: ${API_URL:-http://backend:8080}
+      API_URL: ${API_URL:-http://backend:8085}
     ports:
-      - "${FRONTEND_PORT:-3000}:3000"
+      - "${FRONTEND_PORT:-3005}:3000"
     networks:
       - bodega-network
 

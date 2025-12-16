@@ -10,7 +10,7 @@
 ### En la computadora de la escuela:
 - Docker y Docker Compose instalados
 - Acceso a internet (para descargar imágenes base)
-- Puertos disponibles: 3000, 8080, 5432
+- Puertos disponibles: Front 3005, Back 8085, PSQL 5435
 
 ## 🚀 Pasos para Dockerizar el Proyecto
 
@@ -76,7 +76,7 @@ docker build -t bodega-backend:latest .
    JWT_SECRET=un_secret_muy_largo_y_seguro_cambiar_en_produccion_minimo_256_bits
    
    # API URL (cambiar según entorno)
-   API_URL=http://localhost:8080
+   API_URL=http://localhost:8085
    ```
 
 ### 3️⃣ Modificar `next.config.ts`
