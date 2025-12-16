@@ -154,38 +154,30 @@ const InventoryModal = ({ producto, onClose, onSuccess }: InventoryModalProps) =
       let response;
       
       if (isEditing) {
-        // Para edición, usar JSON si no hay imagen nueva
-        const body: {
-          noInv: string;
-          noSerie: string;
-          modelo: string;
-          foto?: string;
-          idArea: number;
-          idCategoria: number;
-          idMarca: number;
-          idEstado: number;
-        } = {
-          noInv: noInv.trim(),
-          noSerie: noTieneSerie ? '' : noSerie.trim(),
-          modelo: noTieneModelo ? '' : modelo.trim(),
-          idArea,
-          idCategoria,
-          idMarca,
-          idEstado
-        };
-
-        if (foto.trim()) {
-          body.foto = foto.trim();
+        // Para edición, también usar FormData para soportar actualización de imagen
+        const formData = new FormData();
+        
+        // Agregar el archivo si hay uno nuevo seleccionado
+        if (selectedFile) {
+          formData.append('file', selectedFile);
         }
+        
+        // Agregar los demás campos
+        formData.append('noInv', noInv.trim());
+        formData.append('noSerie', noTieneSerie ? '' : noSerie.trim());
+        formData.append('modelo', noTieneModelo ? '' : modelo.trim());
+        formData.append('idArea', idArea.toString());
+        formData.append('idCategoria', idCategoria.toString());
+        formData.append('idMarca', idMarca.toString());
+        formData.append('idEstado', idEstado.toString());
 
         // Actualizar producto existente (PUT)
         response = await fetch(`/api/auth/productos/${producto.idProducto}`, {
           method: 'PUT',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify(body)
+          body: formData
         });
       } else {
         // Para crear nuevo producto, usar FormData para soportar archivos
