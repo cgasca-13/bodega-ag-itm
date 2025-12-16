@@ -61,15 +61,34 @@ export async function PUT(
         }
 
         const { id } = await params;
-        const body = await request.json();
+        
+        // Intentar obtener FormData (si viene con archivo) o JSON
+        const contentType = request.headers.get('content-type') || '';
+        let formData: FormData;
+        
+        if (contentType.includes('multipart/form-data') || !contentType.includes('application/json')) {
+            // Es FormData
+            formData = await request.formData();
+        } else {
+            // Es JSON, convertir a FormData
+            const body = await request.json();
+            formData = new FormData();
+            
+            Object.keys(body).forEach(key => {
+                if (body[key] !== undefined && body[key] !== null) {
+                    formData.append(key, body[key].toString());
+                }
+            });
+        }
 
+        // Enviar FormData al backend
         const response = await fetch(`${process.env.API_URL}/api/productos/${id}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json',
                 'Authorization': authHeader!
+                // No incluir Content-Type, fetch lo setea automáticamente
             },
-            body: JSON.stringify(body)
+            body: formData
         });
 
         if (!response.ok) {

@@ -114,7 +114,7 @@ export default function StatusTable() {
           >
             <FaRegEdit className='text-xl hover:cursor-pointer'/>
           </button>
-          {row.nombre !== 'En Bodega' && row.nombre !== 'Baja' ? (
+          {row.nombre !== 'En Bodega' && row.nombre !== 'Baja' && row.nombre !== 'En Uso' ? (
             <button
               onClick={() => handleDelete(row)}
               className="text-[#F44336] hover:text-red-700 hover:cursor-pointer">
