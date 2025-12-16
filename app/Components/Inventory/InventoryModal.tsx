@@ -56,6 +56,7 @@ const InventoryModal = ({ producto, onClose, onSuccess }: InventoryModalProps) =
   const [idEstado, setIdEstado] = React.useState(producto?.estado.idEstado || 0);
   const [noTieneSerie, setNoTieneSerie] = React.useState(false);
   const [noTieneModelo, setNoTieneModelo] = React.useState(false);
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState('');
 
@@ -150,32 +151,33 @@ const InventoryModal = ({ producto, onClose, onSuccess }: InventoryModalProps) =
         return;
       }
 
-      const body: {
-        noInv: string;
-        noSerie: string;
-        modelo: string;
-        foto?: string;
-        idArea: number;
-        idCategoria: number;
-        idMarca: number;
-        idEstado: number;
-      } = {
-        noInv: noInv.trim(),
-        noSerie: noTieneSerie ? '' : noSerie.trim(),
-        modelo: noTieneModelo ? '' : modelo.trim(),
-        idArea,
-        idCategoria,
-        idMarca,
-        idEstado
-      };
-
-      if (foto.trim()) {
-        body.foto = foto.trim();
-      }
-
       let response;
       
       if (isEditing) {
+        // Para edición, usar JSON si no hay imagen nueva
+        const body: {
+          noInv: string;
+          noSerie: string;
+          modelo: string;
+          foto?: string;
+          idArea: number;
+          idCategoria: number;
+          idMarca: number;
+          idEstado: number;
+        } = {
+          noInv: noInv.trim(),
+          noSerie: noTieneSerie ? '' : noSerie.trim(),
+          modelo: noTieneModelo ? '' : modelo.trim(),
+          idArea,
+          idCategoria,
+          idMarca,
+          idEstado
+        };
+
+        if (foto.trim()) {
+          body.foto = foto.trim();
+        }
+
         // Actualizar producto existente (PUT)
         response = await fetch(`/api/auth/productos/${producto.idProducto}`, {
           method: 'PUT',
@@ -186,14 +188,30 @@ const InventoryModal = ({ producto, onClose, onSuccess }: InventoryModalProps) =
           body: JSON.stringify(body)
         });
       } else {
-        // Crear nuevo producto (POST)
+        // Para crear nuevo producto, usar FormData para soportar archivos
+        const formData = new FormData();
+        
+        // Agregar el archivo con el nombre 'file' (minúscula)
+        if (selectedFile) {
+          formData.append('file', selectedFile);
+        }
+        
+        // Agregar los demás campos
+        formData.append('noInv', noInv.trim());
+        formData.append('noSerie', noTieneSerie ? '' : noSerie.trim());
+        formData.append('modelo', noTieneModelo ? '' : modelo.trim());
+        formData.append('idArea', idArea.toString());
+        formData.append('idCategoria', idCategoria.toString());
+        formData.append('idMarca', idMarca.toString());
+        formData.append('idEstado', idEstado.toString());
+
+        // Crear nuevo producto (POST) - NO incluir Content-Type, el navegador lo setea automáticamente con el boundary
         response = await fetch('/api/auth/productos/create', {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify(body)
+          body: formData
         });
       }
 
@@ -305,32 +323,25 @@ const InventoryModal = ({ producto, onClose, onSuccess }: InventoryModalProps) =
             <input
               type="file"
               accept="image/*"
-              onChange={async (e) => {
+              onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) {
-                  setIsLoading(true);
-                  const formData = new FormData();
-                  formData.append('file', file);
-                  formData.append('upload_preset', 'bodega_preset');
-                  
-                  try {
-                    const response = await fetch('https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload', {
-                      method: 'POST',
-                      body: formData
-                    });
-                    const data = await response.json();
-                    setFoto(data.secure_url);
-                  } catch {
-                    setError('Error al subir la imagen');
-                  } finally {
-                    setIsLoading(false);
-                  }
+                  setSelectedFile(file);
+                  // Crear preview local
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setFoto(reader.result as string);
+                  };
+                  reader.readAsDataURL(file);
                 }
               }}
               className='w-full p-3 border-2 border-[#C9CBCD] rounded-xl focus:outline-none focus:border-[#233876] focus:ring-2 focus:ring-[#233876]/20'
             />
             {foto && (
               <div className='mt-2'>
+                <div className='text-xs text-gray-500 mb-1'>
+                  {selectedFile ? `Archivo seleccionado: ${selectedFile.name}` : 'Vista previa'}
+                </div>
                 <Image src={foto} alt="Preview" width={128} height={128} className='object-cover rounded-lg border-2 border-gray-200' />
               </div>
             )}
